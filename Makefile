@@ -7,3 +7,9 @@ test:
 
 bench:
 	go test --bench . --benchmem
+
+run:
+	go run ./cmd/merge
+
+build:
+	go build ./cmd/merge

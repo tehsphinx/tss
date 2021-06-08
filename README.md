@@ -3,7 +3,7 @@
 
 ## Thoughts on the task itself
 1) The task says to merge intervals that overlap. It is not clearly defined what happens with intervals that
-   follow one another (e.g `[1,6][6,9]`) as it is also not clearly defined if the start and the end belong to the interval
+   follow one another (e.g `[1,6][6,9]`) as it is also not clearly defined if start and end belong to the interval,
    or if one or both of them are excluded. For my solution I will assume that both start and end are part of the interval.
    Then the example above cosists of overlapping intervals which need to be merged.
 2) It is not clearly defined if the input of the function is a `string` or `byte array` which needs to be parsed first and
@@ -17,7 +17,7 @@
 ## Steps to the Solution
 I will try to let my git history reflect my steps and additionally document them here.
 1) Reflect the task itself. Think about border cases, undefined behaviour, context. In a production scenario I would
-   clearify these questions with stake holders, product managers, colleagues, etc. Here I had to make some assumptions
+   clearify these questions with stakeholders, product managers, colleagues, etc. Here I had to make some assumptions
    which I have documented above in the section "Thoughts on the task itself".
 2) Create the git repo, initialize the go module.
 3) Define the module API (`Merge` function and `Interval` type).
@@ -39,8 +39,10 @@ I will try to let my git history reflect my steps and additionally document them
     BenchmarkMerge-12               	 6218521	       170.8 ns/op	     113 B/op	       4 allocs/op
     BenchmarkMergeAlternative-12    	 6644235	       174.2 ns/op	     113 B/op	       4 allocs/op
     Will stick to my solution as there is no performance gain. Will keep the alternative implementation in the repo for reference.
-
+12) Add interval validation
+13) Add sample app and run/build to Makefile
 
 # Time Table
 - 7.Jun 17:40-18:30 (1. to 5.)
-- 8.Jun 08:45- (6. to )
+- 8.Jun 08:45-10:20 (6. to 13.) incl. 15min break
+
