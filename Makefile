@@ -9,10 +9,10 @@ bench:
 	go test --bench . --benchmem
 
 run:
-	go run ./cmd/merge
+	go run ./cmd/sample
 
 build:
-	go build ./cmd/merge
+	go build ./cmd/sample
 
 depgraph:
 	godepgraph github.com/tehsphinx/tss | dot -Tpng -o depgraph.png
