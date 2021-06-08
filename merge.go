@@ -40,13 +40,6 @@ func Merge(intervals []Interval) ([]Interval, error) {
 	return res, nil
 }
 
-func max(i1, i2 int) int {
-	if i1 < i2 {
-		return i2
-	}
-	return i1
-}
-
 // MergeP merges the given intervals returning a list of intervals without any overlap.
 // This is a pure function (not changing the input slice). The function will return an error if
 // one or more invalid intervals are provided.
@@ -59,4 +52,11 @@ func copyIntervals(intervals []Interval) []Interval {
 	c := make([]Interval, len(intervals))
 	copy(c, intervals)
 	return c
+}
+
+func max(i1, i2 int) int {
+	if i1 < i2 {
+		return i2
+	}
+	return i1
 }

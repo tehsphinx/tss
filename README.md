@@ -29,7 +29,10 @@ I will try to let my git history reflect my steps and additionally document them
 6) Sorting the input `slice` will change the slice, so we'd need to make a copy of it if we want a pure function. Adjust
    API to accomodate for both use cases. The non-pure function will have the advantage of more performance and less allocated
    memory.
-   
+7) first implementation getting the tests to pass
+8) add benchmarks
+9) add Makefile to execute tests and benchmarks; includes a list of available commands
+
 
 # Time Table
 - 7.Jun 17:40-18:30 (1. to 5.)

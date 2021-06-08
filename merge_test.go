@@ -115,3 +115,19 @@ func TestMergeP(t *testing.T) {
 		})
 	}
 }
+
+func BenchmarkMerge(b *testing.B) {
+	l := len(mergeTests)
+	for i := 0; i < b.N; i++ {
+		tt := mergeTests[i%l]
+		_, _ = Merge(tt.input)
+	}
+}
+
+func BenchmarkMergeP(b *testing.B) {
+	l := len(mergeTests)
+	for i := 0; i < b.N; i++ {
+		tt := mergeTests[i%l]
+		_, _ = MergeP(tt.input)
+	}
+}
