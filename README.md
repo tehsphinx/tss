@@ -32,6 +32,13 @@ I will try to let my git history reflect my steps and additionally document them
 7) first implementation getting the tests to pass
 8) add benchmarks
 9) add Makefile to execute tests and benchmarks; includes a list of available commands
+10) Benchmarks are as expected. The pure implementation is slightly slower and allocates more memory:
+    BenchmarkMerge-12     	 5804788	       176.1 ns/op	     113 B/op	       4 allocs/op
+    BenchmarkMergeP-12    	 5925892	       200.8 ns/op	     160 B/op	       5 allocs/op
+11) Cleanup and optimize; check performance against a reference implementation from SO: https://codereview.stackexchange.com/questions/259048/merge-intervalsgolang
+    BenchmarkMerge-12               	 6218521	       170.8 ns/op	     113 B/op	       4 allocs/op
+    BenchmarkMergeAlternative-12    	 6644235	       174.2 ns/op	     113 B/op	       4 allocs/op
+    Will stick to my solution as there is no performance gain. Will keep the alternative implementation in the repo for reference.
 
 
 # Time Table

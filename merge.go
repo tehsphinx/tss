@@ -9,10 +9,16 @@ type Interval struct {
 
 // Merge merges the given intervals returning a list of intervals without any overlap.
 // The function will return an error if one or more invalid intervals are provided.
+// TODO: implement checking for valid intervals
 func Merge(intervals []Interval) ([]Interval, error) {
-	sort.Slice(intervals, func(i, j int) bool {
-		return intervals[i].Start < intervals[j].Start
-	})
+	if len(intervals) == 0 {
+		return nil, nil
+	}
+	if len(intervals) > 1 {
+		sort.Slice(intervals, func(i, j int) bool {
+			return intervals[i].Start < intervals[j].Start
+		})
+	}
 
 	var (
 		res     []Interval
@@ -25,15 +31,33 @@ func Merge(intervals []Interval) ([]Interval, error) {
 		}
 		if interval.Start <= current.End {
 			current.End = max(interval.End, current.End)
-			if i == len(intervals)-1 {
-				res = append(res, current)
-			}
 			continue
 		}
 		res = append(res, current)
 		current = interval
-		if i == len(intervals)-1 {
-			res = append(res, current)
+	}
+	// add left over item
+	res = append(res, current)
+
+	return res, nil
+}
+
+// MergeAlternative merges the given intervals returning a list of intervals without any overlap.
+// The function will return an error if one or more invalid intervals are provided.
+func MergeAlternative(intervals []Interval) ([]Interval, error) {
+	if len(intervals) > 1 {
+		sort.Slice(intervals, func(i, j int) bool {
+			return intervals[i].Start < intervals[j].Start
+		})
+	}
+
+	var res []Interval
+	for _, interval := range intervals {
+		maxI := len(res) - 1
+		if maxI < 0 || interval.Start > res[maxI].End {
+			res = append(res, interval)
+		} else if res[maxI].End < interval.End {
+			res[maxI].End = interval.End
 		}
 	}
 
