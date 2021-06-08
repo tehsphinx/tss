@@ -6,89 +6,93 @@ import (
 	"github.com/matryer/is"
 )
 
-var mergeTests = []struct {
+type test struct {
 	name    string
 	input   []Interval
 	want    []Interval
 	wantErr bool
-}{
-	{
-		name:  "no intervals",
-		input: nil,
-		want:  nil,
-	},
-	{
-		name: "no overlapping intervals",
-		input: []Interval{
-			{Start: -22, End: -1},
-			{Start: 0, End: 3},
-			{Start: 234, End: 5234},
+}
+
+func getTests() []test {
+	return []test{
+		{
+			name:  "no intervals",
+			input: nil,
+			want:  nil,
 		},
-		want: []Interval{
-			{Start: -22, End: -1},
-			{Start: 0, End: 3},
-			{Start: 234, End: 5234},
+		{
+			name: "no overlapping intervals",
+			input: []Interval{
+				{Start: 0, End: 3},
+				{Start: -22, End: -1},
+				{Start: 234, End: 5234},
+			},
+			want: []Interval{
+				{Start: -22, End: -1},
+				{Start: 0, End: 3},
+				{Start: 234, End: 5234},
+			},
 		},
-	},
-	{
-		name: "two overlapping intervals",
-		input: []Interval{
-			{Start: -22, End: -1},
-			{Start: -5, End: 3},
-			{Start: 234, End: 5234},
+		{
+			name: "two overlapping intervals",
+			input: []Interval{
+				{Start: 234, End: 5234},
+				{Start: -22, End: -1},
+				{Start: -5, End: 3},
+			},
+			want: []Interval{
+				{Start: -22, End: 3},
+				{Start: 234, End: 5234},
+			},
 		},
-		want: []Interval{
-			{Start: -22, End: 3},
-			{Start: 234, End: 5234},
+		{
+			name: "included interval",
+			input: []Interval{
+				{Start: -22, End: -1},
+				{Start: 523, End: 2352},
+				{Start: 234, End: 5234},
+			},
+			want: []Interval{
+				{Start: -22, End: -1},
+				{Start: 234, End: 5234},
+			},
 		},
-	},
-	{
-		name: "included interval",
-		input: []Interval{
-			{Start: -22, End: -1},
-			{Start: 523, End: 2352},
-			{Start: 234, End: 5234},
+		{
+			name: "overlapping and included",
+			input: []Interval{
+				{Start: -3, End: 29},
+				{Start: -22, End: -1},
+				{Start: -5, End: 33},
+				{Start: -20, End: -10},
+			},
+			want: []Interval{
+				{Start: -22, End: 33},
+			},
 		},
-		want: []Interval{
-			{Start: -22, End: -1},
-			{Start: 234, End: 5234},
+		{
+			name: "adjacent intervals",
+			input: []Interval{
+				{Start: -1, End: 1},
+				{Start: 1, End: 15},
+				{Start: -20, End: -1},
+			},
+			want: []Interval{
+				{Start: -20, End: 15},
+			},
 		},
-	},
-	{
-		name: "overlapping and included",
-		input: []Interval{
-			{Start: -22, End: -1},
-			{Start: -20, End: -10},
-			{Start: -5, End: 33},
-			{Start: -3, End: 29},
+		{
+			name: "invalid interval",
+			input: []Interval{
+				{Start: -22, End: -23},
+			},
+			want:    nil,
+			wantErr: true,
 		},
-		want: []Interval{
-			{Start: -22, End: 33},
-		},
-	},
-	{
-		name: "adjacent intervals",
-		input: []Interval{
-			{Start: -20, End: -1},
-			{Start: -1, End: 1},
-			{Start: 1, End: 15},
-		},
-		want: []Interval{
-			{Start: -20, End: 15},
-		},
-	},
-	{
-		name: "invalid interval",
-		input: []Interval{
-			{Start: -22, End: -23},
-		},
-		want:    nil,
-		wantErr: true,
-	},
+	}
 }
 
 func TestMerge(t *testing.T) {
-	for _, tt := range mergeTests {
+	for _, tt := range getTests() {
 		t.Run(tt.name, func(t *testing.T) {
 			asrt := is.New(t)
 
@@ -102,7 +106,7 @@ func TestMerge(t *testing.T) {
 }
 
 func TestMergeInplace(t *testing.T) {
-	for _, tt := range mergeTests {
+	for _, tt := range getTests() {
 		t.Run(tt.name, func(t *testing.T) {
 			asrt := is.New(t)
 
@@ -116,7 +120,7 @@ func TestMergeInplace(t *testing.T) {
 }
 
 func TestMergeAlternative(t *testing.T) {
-	for _, tt := range mergeTests {
+	for _, tt := range getTests() {
 		t.Run(tt.name, func(t *testing.T) {
 			asrt := is.New(t)
 
@@ -130,7 +134,7 @@ func TestMergeAlternative(t *testing.T) {
 }
 
 func TestMergeP(t *testing.T) {
-	for _, tt := range mergeTests {
+	for _, tt := range getTests() {
 		t.Run(tt.name, func(t *testing.T) {
 			asrt := is.New(t)
 
@@ -153,7 +157,10 @@ func TestMergeP(t *testing.T) {
 }
 
 func BenchmarkMerge(b *testing.B) {
+	mergeTests := getTests()
 	l := len(mergeTests)
+
+	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		tt := mergeTests[i%l]
 		_, _ = Merge(tt.input)
@@ -161,7 +168,10 @@ func BenchmarkMerge(b *testing.B) {
 }
 
 func BenchmarkMergeInplace(b *testing.B) {
+	mergeTests := getTests()
 	l := len(mergeTests)
+
+	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		tt := mergeTests[i%l]
 		_, _ = MergeInplace(tt.input)
@@ -169,7 +179,10 @@ func BenchmarkMergeInplace(b *testing.B) {
 }
 
 func BenchmarkMergeAlternative(b *testing.B) {
+	mergeTests := getTests()
 	l := len(mergeTests)
+
+	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		tt := mergeTests[i%l]
 		_, _ = MergeAlternative(tt.input)
@@ -177,7 +190,10 @@ func BenchmarkMergeAlternative(b *testing.B) {
 }
 
 func BenchmarkMergeP(b *testing.B) {
+	mergeTests := getTests()
 	l := len(mergeTests)
+
+	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		tt := mergeTests[i%l]
 		_, _ = MergeP(tt.input)

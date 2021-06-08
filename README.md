@@ -115,6 +115,8 @@ BenchmarkMergeInplace-12        	 8518618	       138.4 ns/op	      74 B/op	     
          .          .     71:			continue
          .          .     72:		}
 ```
+19) Make tests independent (because of inplace merging and sorting)
+
 
     
 
