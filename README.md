@@ -3,7 +3,7 @@
 
 ## Installation
 
-To be able to build this solution, run the tests/benchmarks or just run the code Go needs to be installed:
+To be able to build this solution, run the tests, benchmarks or run the sample, Go needs to be installed:
 - Go (v1.16) - https://golang.org/dl/
 
 Some `Makefile` commands need extra tools which are then listed below in the tools section.
@@ -22,10 +22,12 @@ Following a list of the `Makefile` commands and what they do (in alphabetical or
 
 ## Answers on Task
 1) Wie ist die Laufzeit Ihres Programms?
-> The run time of the merge function is O(n log n).
+> The run time of the `Merge` function is O(n * log n).
 2) Wie kann die Robustheit sichergestellt werden, vor allem auch mit Hinblick auf sehr große Eingaben?
 > There are 2 factors that could break robustness: 1) response time and 2) memory.
-> 1) Regarding response time: all that can be done is optimise the algorithm to be as fast as possible.
+> 1) Regarding response time: all that can be done is optimise the algorithm to be as fast as possible. The data could
+     also be split up to be merged on multiple cores or servers in parallel, and the results then be appended and merged again.
+     The merge would be most efficient if the intervals are already sorted.
 > 2) Regarding memory: the `Merge` function will allocate a maximum memory of the size of the input slice. The worst
      case is if there are no overlaps, then every interval will be added to the resulting `slice`. This could be avoided 
      by writing a merge function that merges the intervals in-place (see `MergeInplace` function).
@@ -37,8 +39,8 @@ Following a list of the `Makefile` commands and what they do (in alphabetical or
 > The website https://afteracademy.com/blog/merge-overlapping-intervals claims that the `Merge` function is O(1) if 
 > the sorting is done in place, which Go does. I don't think that is correct, as it creates a new slice to return 
 > and fills it with the non-overlapping intervals. So it is limited by O(n). It can be made O(1) if the merging is also
-> done in place as discussed also in the previous answer. This is show-cased with the 0 allocation `MergeInplace` function.
-> It has a very simple sort algorithm though making it not very cpu efficient for large slices.
+> done in place as discussed in the previous answer. This is show-cased with the 0 allocation `MergeInplace` function.
+> It has a very simple sort algorithm though, making it not very cpu efficient for large slices.
 
 ## Thoughts on the task itself
 1) The task says to merge intervals that overlap. It is not clearly defined what happens with intervals that
@@ -124,12 +126,24 @@ BenchmarkMergeInplace-12        	57731587	        20.39 ns/op	       0 B/op	    
 ```
 21) Build a streaming merge algorithm. To imitate streaming we use channels here. In production this could for example be
     a grpc service with a two-way streaming endpoint.
+22) use a larger sample for benchmarks to get a more realistic comparison
+23) implemment a custom inplace quicksort. Benchmarks show that it is still slower than the Go interval sorting (which 
+    is also quick-sort), but it does not create any allocations, which was the point of the `MergeInplace` function. 
+    Interestingly the sample is still not big enough to make the basic sort algorithm slower than the quick sort.
+```
+BenchmarkMerge-12                    	  374595	      3138 ns/op	     168 B/op	       7 allocs/op
+BenchmarkMergeInplace-12             	  267241	      4520 ns/op	       0 B/op	       0 allocs/op
+BenchmarkMergeInplaceBasicSort-12    	  421921	      2749 ns/op	       0 B/op	       0 allocs/op
+BenchmarkMergeAlternative-12         	  368894	      3192 ns/op	     168 B/op	       7 allocs/op
+BenchmarkMergeP-12                   	  185913	      6288 ns/op	    1576 B/op	       8 allocs/op
+```
 
 # Time Table
 - 7.Jun 17:40-18:30 (1. to 5.)
 - 8.Jun 08:45-10:20 (6. to 13.) incl. 15min in breaks
 - 8.Jun 11:00-11:30 (14. to 15.)
 - 8.Jun 16:10-18:00 (16. to 21.)
+- 8.Jun 22:15- (22. to )
 
 # Tools
 - Language: Go

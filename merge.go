@@ -55,7 +55,41 @@ func Merge(intervals []Interval) ([]Interval, error) {
 
 // MergeInplace merges the given intervals returning a list of intervals without any overlap.
 // The function will return an error if one or more invalid intervals are provided.
+// This uses quick sort for sorting.
 func MergeInplace(intervals []Interval) ([]Interval, error) {
+	if len(intervals) == 0 {
+		return nil, nil
+	}
+	if len(intervals) > 1 {
+		quickSortInplace(intervals)
+	}
+
+	var current int
+	for i, interval := range intervals {
+		if interval.End < interval.Start {
+			return nil, ErrorInvalidInterval
+		}
+
+		if i == 0 {
+			continue
+		}
+		if interval.Start <= intervals[current].End {
+			// overlap
+			intervals[current].End = max(interval.End, intervals[current].End)
+			continue
+		}
+		current++
+		intervals[current].Start = interval.Start
+		intervals[current].End = interval.End
+	}
+
+	return intervals[:current+1], nil
+}
+
+// MergeInplaceBasicSort merges the given intervals returning a list of intervals without any overlap.
+// The function will return an error if one or more invalid intervals are provided.
+// Using a rudementary sorting algorithm.
+func MergeInplaceBasicSort(intervals []Interval) ([]Interval, error) {
 	if len(intervals) == 0 {
 		return nil, nil
 	}
@@ -155,25 +189,4 @@ func max(i1, i2 int) int {
 		return i2
 	}
 	return i1
-}
-
-func sortInplace(vals []Interval) {
-	switched := true
-	for switched {
-		switched = sortRun(vals)
-	}
-}
-
-func sortRun(vals []Interval) bool {
-	l := len(vals)
-	var switched bool
-	for i := 0; i < l; i++ {
-		for j := i; j < l; j++ {
-			if vals[j].Start < vals[i].Start {
-				vals[i], vals[j] = vals[j], vals[i]
-				switched = true
-			}
-		}
-	}
-	return switched
 }
