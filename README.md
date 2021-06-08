@@ -59,6 +59,22 @@ Following a list of the `Makefile` commands and what they do (in alphabetical or
    or execute any further command. Just installing Go would remove the docker dependency, but not show my docker skills.
    Will go with installing Go to keep the scope more focused on the task.
 
+## Result
+Usually I would cleanup all the intermediary steps now and make this a very clean repository. To better demonstrate my
+development and though process, I'm not going to do that. So bare with me on this.
+
+Resulting we have several Merge functions, some of which are a better fit in different situations with different requirements.
+- `Merge` is a robust alrounder.
+- `MergeInplace` is using a slower, but inplace sorting algorithm. With huge data sets this could still work where `Merge`
+  runs out of memory.
+- `MergeInplaceBasicSort` is using a very basic inplace sorting with at least O(n2), so with larger input this should 
+  become really slow. (This should not be used.)
+- `MergeStream` is a proof-of-concept for a streaming implementation if not all data can be held in memory. This requires
+  the data to be already sorted by the interval start.
+- `MergeAlternative` was just a quick check against an implementation more or less copied from the internet.
+- `MergeP` is a pure function not changing its input and then using `Merge`. Could be switched to use any of the other 
+  sorting functions (except `MergeStream`) as well.
+
 ## Steps to the Solution
 I will try to let my git history reflect my steps and additionally document them here.
 1) Reflect the task itself. Think about border cases, undefined behaviour, context. In a production scenario I would
@@ -139,14 +155,15 @@ BenchmarkMergeAlternative-12         	  368894	      3192 ns/op	     168 B/op	  
 BenchmarkMergeP-12                   	  185913	      6288 ns/op	    1576 B/op	       8 allocs/op
 ```
 24) Add linting command and configure golangci-lint.
+25) Add a section `Result` in this document, summurizing the outcome.
 
 # Time Table
 - 7.Jun 17:40-18:30 (1. to 5.)
 - 8.Jun 08:45-10:20 (6. to 13.) incl. 15min in breaks
 - 8.Jun 11:00-11:30 (14. to 15.)
 - 8.Jun 16:10-18:00 (16. to 21.)
-- 8.Jun 22:15-23:00 (22. to 24.)
-Total Time: 5h 15min
+- 8.Jun 22:15-23:15 (22. to 25.)
+Total Time: 5h 30min
 
 # Tools
 - Language: Go
