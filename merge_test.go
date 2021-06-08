@@ -101,6 +101,9 @@ func TestMergeP(t *testing.T) {
 			// make a copy of input to be able to compare it against the original for changes by reference
 			input := make([]Interval, len(tt.input))
 			copy(input, tt.input)
+			if tt.input == nil {
+				input = nil
+			}
 
 			got, err := MergeP(input)
 			// check if error is as expected
