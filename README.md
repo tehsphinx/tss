@@ -23,7 +23,7 @@ I will try to let my git history reflect my steps and additionally document them
 3) Define the module API (`Merge` function and `Interval` type).
 4) Write some (failing) tests for the function.
 5) Have a quick look on promising merge algorithms, and their time vs space complexity to confirm or dismiss my initial 
-   idea of sorting the intervals first:
+   idea of sorting the intervals first (avoiding O(n2)):
    - https://afteracademy.com/blog/merge-overlapping-intervals
    - https://www.csestack.org/merge-overlapping-intervals/
 6) Sorting the input `slice` will change the slice, so we'd need to make a copy of it if we want a pure function. Adjust
@@ -41,8 +41,27 @@ I will try to let my git history reflect my steps and additionally document them
     Will stick to my solution as there is no performance gain. Will keep the alternative implementation in the repo for reference.
 12) Add interval validation
 13) Add sample app and run/build to Makefile
+14) Add depgraph
+15) Complete documentation and add to Makefile
+
+TODO: 
+- Go documentation
+- Readme instructions
+- memory profile? cpu profile?
+- answer questions of task
+- add implementation using slice of slices to avoid not doing what was asked in the first place?
 
 # Time Table
 - 7.Jun 17:40-18:30 (1. to 5.)
-- 8.Jun 08:45-10:20 (6. to 13.) incl. 15min break
+- 8.Jun 08:45-10:20 (6. to 13.) incl. 15min in breaks
+- 8.Jun 11:00 (14. to )
 
+# Tools
+- Language: Go
+- Goland IDE (Jetbrains)
+- iTerm
+- git
+- SourceTree
+- graphViz (https://graphviz.org/)
+- godepgraph (https://github.com/kisielk/godepgraph)
+- godoc (https://pkg.go.dev/golang.org/x/tools/cmd/godoc)
