@@ -101,6 +101,20 @@ func TestMerge(t *testing.T) {
 	}
 }
 
+func TestMergeInplace(t *testing.T) {
+	for _, tt := range mergeTests {
+		t.Run(tt.name, func(t *testing.T) {
+			asrt := is.New(t)
+
+			got, err := MergeInplace(tt.input)
+			// check if error is as expected
+			asrt.Equal(err != nil, tt.wantErr)
+			// compare expected result
+			asrt.Equal(got, tt.want)
+		})
+	}
+}
+
 func TestMergeAlternative(t *testing.T) {
 	for _, tt := range mergeTests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -143,6 +157,14 @@ func BenchmarkMerge(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		tt := mergeTests[i%l]
 		_, _ = Merge(tt.input)
+	}
+}
+
+func BenchmarkMergeInplace(b *testing.B) {
+	l := len(mergeTests)
+	for i := 0; i < b.N; i++ {
+		tt := mergeTests[i%l]
+		_, _ = MergeInplace(tt.input)
 	}
 }
 

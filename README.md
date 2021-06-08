@@ -73,20 +73,50 @@ I will try to let my git history reflect my steps and additionally document them
 8) add benchmarks
 9) add Makefile to execute tests and benchmarks; includes a list of available commands
 10) Benchmarks are as expected. The pure implementation is slightly slower and allocates more memory:
-    BenchmarkMerge-12     	 5804788	       176.1 ns/op	     113 B/op	       4 allocs/op
-    BenchmarkMergeP-12    	 5925892	       200.8 ns/op	     160 B/op	       5 allocs/op
+```
+BenchmarkMerge-12     	 5804788	       176.1 ns/op	     113 B/op	       4 allocs/op
+BenchmarkMergeP-12    	 5925892	       200.8 ns/op	     160 B/op	       5 allocs/op
+```
 11) Cleanup and optimize; check performance against a reference implementation from SO: https://codereview.stackexchange.com/questions/259048/merge-intervalsgolang
-    BenchmarkMerge-12               	 6218521	       170.8 ns/op	     113 B/op	       4 allocs/op
-    BenchmarkMergeAlternative-12    	 6644235	       174.2 ns/op	     113 B/op	       4 allocs/op
-    Will stick to my solution as there is no performance gain. Will keep the alternative implementation in the repo for reference.
+```
+BenchmarkMerge-12               	 6218521	       170.8 ns/op	     113 B/op	       4 allocs/op
+BenchmarkMergeAlternative-12    	 6644235	       174.2 ns/op	     113 B/op	       4 allocs/op
+```
 12) Add interval validation
 13) Add sample app and run/build to Makefile
 14) Add depgraph
 15) Complete documentation and add to Makefile
 16) Answer questions of the task.
+17) Write inplace algorithm reducing the memory-limitation problem.
+18) Benchmarking the algorithm shows there are still allocations. Creating a memory profile (second box) shows that the 
+    inplace sorting of Go is not allocation free (also discussed here https://github.com/golang/go/issues/17332). 
+    The error return creates an allocation as well.
+```
+BenchmarkMergeInplace-12        	 8518618	       138.4 ns/op	      74 B/op	       2 allocs/op
+```
+```
+         .          .     54:func MergeInplace(intervals []Interval) ([]Interval, error) {
+         .          .     55:	if len(intervals) == 0 {
+         .          .     56:		return nil, nil
+         .          .     57:	}
+         .          .     58:	if len(intervals) > 1 {
+     150MB   530.02MB     59:		sort.Slice(intervals, func(i, j int) bool {
+         .          .     60:			return intervals[i].Start < intervals[j].Start
+         .          .     61:		})
+         .          .     62:	}
+         .          .     63:
+         .          .     64:	var current int
+         .          .     65:	for i, interval := range intervals {
+         .          .     66:		if interval.End < interval.Start {
+      19MB      101MB     67:			return nil, fmt.Errorf("invalid interval: from %d to %d", interval.Start, interval.End)
+         .          .     68:		}
+         .          .     69:
+         .          .     70:		if i == 0 {
+         .          .     71:			continue
+         .          .     72:		}
+```
 
-TODO: 
-- add implementation using slice of slices to avoid not doing what was asked in the first place?
+    
 
 # Time Table
 - 7.Jun 17:40-18:30 (1. to 5.)
