@@ -60,9 +60,7 @@ func MergeInplace(intervals []Interval) ([]Interval, error) {
 		return nil, nil
 	}
 	if len(intervals) > 1 {
-		sort.Slice(intervals, func(i, j int) bool {
-			return intervals[i].Start < intervals[j].Start
-		})
+		sortInplace(intervals)
 	}
 
 	var current int
@@ -133,4 +131,25 @@ func max(i1, i2 int) int {
 		return i2
 	}
 	return i1
+}
+
+func sortInplace(vals []Interval) {
+	switched := true
+	for switched {
+		switched = sortRun(vals)
+	}
+}
+
+func sortRun(vals []Interval) bool {
+	l := len(vals)
+	var switched bool
+	for i := 0; i < l; i++ {
+		for j := i; j < l; j++ {
+			if vals[j].Start < vals[i].Start {
+				vals[i], vals[j] = vals[j], vals[i]
+				switched = true
+			}
+		}
+	}
+	return switched
 }

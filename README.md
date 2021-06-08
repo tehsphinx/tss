@@ -28,15 +28,16 @@ Following a list of the `Makefile` commands and what they do (in alphabetical or
 > 1) Regarding response time: all that can be done is optimise the algorithm to be as fast as possible.
 > 2) Regarding memory: the `Merge` function will allocate a maximum memory of the size of the input slice. The worst
      case is if there are no overlaps, then every interval will be added to the resulting `slice`. This could be avoided 
-     by writing a merge function that merges the intervals in place (in the existing `slice` without creating a new one). 
-     If we are talking the size of a list of intervals that does not event fit into memory, then we could use a streaming 
-     algorithm. It would require (!) the intervals to be streamed in a sorted fashion. It would have an input stream of 
-     intervals, and an output stream of intervals and remember only one interval to compare it to the next.
+     by writing a merge function that merges the intervals in-place (see `MergeInplace` function).
+     If we are talking about the size of an input list that does not fit into memory, then we could use a streaming 
+     algorithm. It would _require_ the intervals to be streamed in an already sorted fashion. It would have an input 
+     stream of intervals, and an output stream of intervals and remember only one interval to compare it to the next.
 3) Wie verhält sich der Speicherverbrauch ihres Programs?
 > The website https://afteracademy.com/blog/merge-overlapping-intervals claims that the `Merge` function is O(1) if 
 > the sorting is done in place, which Go does. I don't think that is correct, as it creates a new slice to return 
 > and fills it with the non-overlapping intervals. So it is limited by O(n). It can be made O(1) if the merging is also
-> done in place as discussed also in the previous answer.
+> done in place as discussed also in the previous answer. This is show-cased with the 0 allocation `MergeInplace` function.
+> It has a very simple sort algorithm though making it not very cpu efficient for large slices.
 
 ## Thoughts on the task itself
 1) The task says to merge intervals that overlap. It is not clearly defined what happens with intervals that
@@ -116,8 +117,10 @@ BenchmarkMergeInplace-12        	 8518618	       138.4 ns/op	      74 B/op	     
          .          .     72:		}
 ```
 19) Make tests independent (because of inplace merging and sorting)
-
-
+20) Replace sort function of `MergeInplace` with a very simple inplace sorting algorithm to showcase 0 allocation merging:
+```
+BenchmarkMergeInplace-12        	57731587	        20.39 ns/op	       0 B/op	       0 allocs/op
+```
     
 
 # Time Table
