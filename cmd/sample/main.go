@@ -1,3 +1,4 @@
+// This package implements a sample program merging a predefined set of intervals.
 package main
 
 import (
