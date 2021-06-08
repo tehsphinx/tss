@@ -21,3 +21,6 @@ doc:
 	@echo "Documentation URL: http://localhost:6060/pkg/github.com/tehsphinx/tss/"
 	@echo "(Press CTRL+C to stop)"
 	@godoc -http=:6060 >/dev/null 2>&1
+
+lint:
+	golangci-lint run

@@ -17,6 +17,7 @@ Following a list of the `Makefile` commands and what they do (in alphabetical or
 - `depgraph` builds a png file of all Go dependencies. (`depgraph.png` added to repo, so the tools needed for this 
   do not need to be installed. If you want to run this, see `Tools` section below and install `graphViz` and `godepgraph`)
 - `doc` starts an http server serving the Go documentation. Open the printed URL to jump directly to the package documentation.
+- `lint` will run golangci-lint using the `.golangci.yml` configuration. This needs `golangci-lint` to be installed.
 - `run` uses `go run` to execute the sample in `./cmd/sample`.
 - `test` executes the tests (in verbose mode).
 
@@ -55,7 +56,7 @@ Following a list of the `Makefile` commands and what they do (in alphabetical or
 4) The task does not really imply that intervals will alway be valid. I will incorporate that and return an error in 
    cases where `end < start`.
 5) What prerequisites do I ask for to be installed? I could go with docker and then use the Go docker image to build 
-   or execute any further command. Just installing Go would remove the docker dependency, but not show off my docker skills.
+   or execute any further command. Just installing Go would remove the docker dependency, but not show my docker skills.
    Will go with installing Go to keep the scope more focused on the task.
 
 ## Steps to the Solution
@@ -137,13 +138,14 @@ BenchmarkMergeInplaceBasicSort-12    	  421921	      2749 ns/op	       0 B/op	  
 BenchmarkMergeAlternative-12         	  368894	      3192 ns/op	     168 B/op	       7 allocs/op
 BenchmarkMergeP-12                   	  185913	      6288 ns/op	    1576 B/op	       8 allocs/op
 ```
+24) Add linting command and configure golangci-lint.
 
 # Time Table
 - 7.Jun 17:40-18:30 (1. to 5.)
 - 8.Jun 08:45-10:20 (6. to 13.) incl. 15min in breaks
 - 8.Jun 11:00-11:30 (14. to 15.)
 - 8.Jun 16:10-18:00 (16. to 21.)
-- 8.Jun 22:15- (22. to )
+- 8.Jun 22:15-23:00 (22. to 24.)
 
 # Tools
 - Language: Go
@@ -151,6 +153,7 @@ BenchmarkMergeP-12                   	  185913	      6288 ns/op	    1576 B/op	  
 - iTerm
 - git
 - SourceTree
+- golangci-lint (https://golangci-lint.run/)
 - graphViz (https://graphviz.org/)
 - godepgraph (https://github.com/kisielk/godepgraph)
 - godoc (https://pkg.go.dev/golang.org/x/tools/cmd/godoc)
