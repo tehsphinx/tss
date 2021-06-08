@@ -1,6 +1,43 @@
 # Coding Task
 ##### Daimler TSS
 
+## Installation
+
+To be able to build this solution, run the tests/benchmarks or just run the code Go needs to be installed:
+- Go (v1.16) - https://golang.org/dl/
+
+Some `Makefile` commands need extra tools which are then listed below in the tools section.
+
+## Usage
+All use cases are added to the `Makefile`. It can be called without a command (just `make`) to list all available commands.
+Following a list of the `Makefile` commands and what they do (in alphabetical order).
+
+- `bench` runs the implemented benchmarks.
+- `build` builds the example in `./cmd/sample`. It can then be executed using `./sample`.
+- `depgraph` builds a png file of all Go dependencies. (`depgraph.png` added to repo, so the tools needed for this 
+  do not need to be installed. If you want to run this, see `Tools` section below and install `graphViz` and `godepgraph`)
+- `doc` starts an http server serving the Go documentation. Open the printed URL to jump directly to the package documentation.
+- `run` uses `go run` to execute the sample in `./cmd/sample`.
+- `test` executes the tests (in verbose mode).
+
+## Answers on Task
+1) Wie ist die Laufzeit Ihres Programms?
+> The run time of the merge function is O(n log n).
+2) Wie kann die Robustheit sichergestellt werden, vor allem auch mit Hinblick auf sehr große Eingaben?
+> There are 2 factors that could break robustness: 1) response time and 2) memory.
+> 1) Regarding response time: all that can be done is optimise the algorithm to be as fast as possible.
+> 2) Regarding memory: the `Merge` function will allocate a maximum memory of the size of the input slice. The worst
+     case is if there are no overlaps, then every interval will be added to the resulting `slice`. This could be avoided 
+     by writing a merge function that merges the intervals in place (in the existing `slice` without creating a new one). 
+     If we are talking the size of a list of intervals that does not event fit into memory, then we could use a streaming 
+     algorithm. It would require (!) the intervals to be streamed in a sorted fashion. It would have an input stream of 
+     intervals, and an output stream of intervals and remember only one interval to compare it to the next.
+3) Wie verhält sich der Speicherverbrauch ihres Programs?
+> The website https://afteracademy.com/blog/merge-overlapping-intervals claims that the `Merge` function is O(1) if 
+> the sorting is done in place, which Go does. I don't think that is correct, as it creates a new slice to return 
+> and fills it with the non-overlapping intervals. So it is limited by O(n). It can be made O(1) if the merging is also
+> done in place as discussed also in the previous answer.
+
 ## Thoughts on the task itself
 1) The task says to merge intervals that overlap. It is not clearly defined what happens with intervals that
    follow one another (e.g `[1,6][6,9]`) as it is also not clearly defined if start and end belong to the interval,
@@ -13,6 +50,9 @@
    in order to test the function. I will also add a small hard-coded sample program that can be executed.
 4) The task does not really imply that intervals will alway be valid. I will incorporate that and return an error in 
    cases where `end < start`.
+5) What prerequisites do I ask for to be installed? I could go with docker and then use the Go docker image to build 
+   or execute any further command. Just installing Go would remove the docker dependency, but not show off my docker skills.
+   Will go with installing Go to keep the scope more focused on the task.
 
 ## Steps to the Solution
 I will try to let my git history reflect my steps and additionally document them here.
@@ -43,18 +83,16 @@ I will try to let my git history reflect my steps and additionally document them
 13) Add sample app and run/build to Makefile
 14) Add depgraph
 15) Complete documentation and add to Makefile
+16) Answer questions of the task.
 
 TODO: 
-- Go documentation
-- Readme instructions
-- memory profile? cpu profile?
-- answer questions of task
 - add implementation using slice of slices to avoid not doing what was asked in the first place?
 
 # Time Table
 - 7.Jun 17:40-18:30 (1. to 5.)
 - 8.Jun 08:45-10:20 (6. to 13.) incl. 15min in breaks
-- 8.Jun 11:00 (14. to )
+- 8.Jun 11:00-11:30 (14. to 15.)
+- 8.Jun 16:10 (16. to )
 
 # Tools
 - Language: Go
