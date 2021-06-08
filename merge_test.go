@@ -77,6 +77,14 @@ var mergeTests = []struct {
 			{Start: -20, End: 15},
 		},
 	},
+	{
+		name: "invalid interval",
+		input: []Interval{
+			{Start: -22, End: -23},
+		},
+		want:    nil,
+		wantErr: true,
+	},
 }
 
 func TestMerge(t *testing.T) {

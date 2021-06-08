@@ -1,6 +1,9 @@
 package tss
 
-import "sort"
+import (
+	"fmt"
+	"sort"
+)
 
 // Interval defines a number interval. Start and End are included.
 type Interval struct {
@@ -9,7 +12,6 @@ type Interval struct {
 
 // Merge merges the given intervals returning a list of intervals without any overlap.
 // The function will return an error if one or more invalid intervals are provided.
-// TODO: implement checking for valid intervals
 func Merge(intervals []Interval) ([]Interval, error) {
 	if len(intervals) == 0 {
 		return nil, nil
@@ -25,6 +27,10 @@ func Merge(intervals []Interval) ([]Interval, error) {
 		current Interval
 	)
 	for i, interval := range intervals {
+		if interval.End < interval.Start {
+			return nil, fmt.Errorf("invalid interval: from %d to %d", interval.Start, interval.End)
+		}
+
 		if i == 0 {
 			current = interval
 			continue
@@ -53,8 +59,12 @@ func MergeAlternative(intervals []Interval) ([]Interval, error) {
 
 	var res []Interval
 	for _, interval := range intervals {
+		if interval.End < interval.Start {
+			return nil, fmt.Errorf("invalid interval: from %d to %d", interval.Start, interval.End)
+		}
+
 		maxI := len(res) - 1
-		if maxI < 0 || interval.Start > res[maxI].End {
+		if res == nil || interval.Start > res[maxI].End {
 			res = append(res, interval)
 		} else if res[maxI].End < interval.End {
 			res[maxI].End = interval.End
