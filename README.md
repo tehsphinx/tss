@@ -32,6 +32,7 @@ Following a list of the `Makefile` commands and what they do (in alphabetical or
      If we are talking about the size of an input list that does not fit into memory, then we could use a streaming 
      algorithm. It would _require_ the intervals to be streamed in an already sorted fashion. It would have an input 
      stream of intervals, and an output stream of intervals and remember only one interval to compare it to the next.
+     See `MergeStream` for a proof-of-concept implementation using channels to imitate streams.
 3) Wie verhält sich der Speicherverbrauch ihres Programs?
 > The website https://afteracademy.com/blog/merge-overlapping-intervals claims that the `Merge` function is O(1) if 
 > the sorting is done in place, which Go does. I don't think that is correct, as it creates a new slice to return 
@@ -121,13 +122,14 @@ BenchmarkMergeInplace-12        	 8518618	       138.4 ns/op	      74 B/op	     
 ```
 BenchmarkMergeInplace-12        	57731587	        20.39 ns/op	       0 B/op	       0 allocs/op
 ```
-    
+21) Build a streaming merge algorithm. To imitate streaming we use channels here. In production this could for example be
+    a grpc service with a two-way streaming endpoint.
 
 # Time Table
 - 7.Jun 17:40-18:30 (1. to 5.)
 - 8.Jun 08:45-10:20 (6. to 13.) incl. 15min in breaks
 - 8.Jun 11:00-11:30 (14. to 15.)
-- 8.Jun 16:10 (16. to )
+- 8.Jun 16:10-18:00 (16. to 21.)
 
 # Tools
 - Language: Go

@@ -1,6 +1,7 @@
 package tss
 
 import (
+	"sort"
 	"testing"
 
 	"github.com/matryer/is"
@@ -113,6 +114,43 @@ func TestMergeInplace(t *testing.T) {
 			got, err := MergeInplace(tt.input)
 			// check if error is as expected
 			asrt.Equal(err != nil, tt.wantErr)
+			// compare expected result
+			asrt.Equal(got, tt.want)
+		})
+	}
+}
+
+func TestMergeStream(t *testing.T) {
+	for _, tt := range getTests() {
+		t.Run(tt.name, func(t *testing.T) {
+			if tt.wantErr {
+				// MergeStream does not handle invalid intervals, so we skip tests expecting an error.
+				t.Skip()
+			}
+
+			asrt := is.New(t)
+
+			chSend := make(chan Interval)
+			chRes := make(chan Interval)
+
+			go MergeStream(chSend, chRes)
+			go func() {
+				input := tt.input
+				sort.Slice(input, func(i, j int) bool {
+					return input[i].Start < input[j].Start
+				})
+
+				for _, interval := range input {
+					chSend <- interval
+				}
+				close(chSend)
+			}()
+
+			var got []Interval
+			for interval := range chRes {
+				got = append(got, interval)
+			}
+
 			// compare expected result
 			asrt.Equal(got, tt.want)
 		})

@@ -85,6 +85,30 @@ func MergeInplace(intervals []Interval) ([]Interval, error) {
 	return intervals[:current+1], nil
 }
 
+// MergeStream merges a stream of intervals, streaming a list of intervals back without any overlap.
+// This function expects an already sorted (by start) and sanitized stream of valid intervals.
+// The output channel is closed if the input was closed and all remaining items have been streamed.
+func MergeStream(in <-chan Interval, out chan<- Interval) {
+	defer close(out)
+
+	// get first element and return if there is none (channel closed)
+	current, ok := <-in
+	if !ok {
+		return
+	}
+	for interval := range in {
+		if interval.Start <= current.End {
+			// overlap
+			current.End = max(interval.End, current.End)
+			continue
+		}
+
+		out <- current
+		current = interval
+	}
+	out <- current
+}
+
 // MergeAlternative merges the given intervals returning a list of intervals without any overlap.
 // The function will return an error if one or more invalid intervals are provided.
 func MergeAlternative(intervals []Interval) ([]Interval, error) {
