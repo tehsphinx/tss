@@ -146,6 +146,7 @@ BenchmarkMergeP-12                   	  185913	      6288 ns/op	    1576 B/op	  
 - 8.Jun 11:00-11:30 (14. to 15.)
 - 8.Jun 16:10-18:00 (16. to 21.)
 - 8.Jun 22:15-23:00 (22. to 24.)
+Total Time: 5h 15min
 
 # Tools
 - Language: Go
