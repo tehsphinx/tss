@@ -58,6 +58,10 @@ Following a list of the `Makefile` commands and what they do (in alphabetical or
 5) What prerequisites do I ask for to be installed? I could go with docker and then use the Go docker image to build 
    or execute any further command. Just installing Go would remove the docker dependency, but not show my docker skills.
    Will go with installing Go to keep the scope more focused on the task.
+6) Why did I choose a `slice of structs` as input, not a `slice of slices`? Readability. Go is a language where readability
+   is one of the foundations baked into the language and which I also highly appreciate and try to live. `interval.Start`
+   is a lot more readable than `interval[0]`, `intervals[i].End` a lot better than `intervals[i][1]`. Of course I'd
+   adjust that to the context if required, e.g. if the data is only available in `slice of slices` format.
 
 ## Result
 Usually I would cleanup all the intermediary steps now and make this a very clean repository. To better demonstrate my
